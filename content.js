@@ -1,4 +1,4 @@
-// content.js
+
 
 // Function to create the annotation UI
 function createAnnotationUI() {
