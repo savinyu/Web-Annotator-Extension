@@ -15,7 +15,7 @@ The Web Annotator Chrome Extension allows users to highlight text on web pages, 
 1. Clone the repository and navigate to the project directory:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/savinyu/Web-Annotator-Extension
    cd chrome-extension
    ```
 2. Install dependencies and build the React application:
