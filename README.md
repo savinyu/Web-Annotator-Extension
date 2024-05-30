@@ -24,6 +24,6 @@ The Web Annotator Chrome Extension allows users to highlight text on web pages, 
    npm run build
    ```
 3. Load the extension in Chrome
-   -Open Chrome and go to chrome://extensions/.
-   -Enable "Developer mode" using the toggle switch in the top-right corner.
-   -Click the "Load unpacked" button and select the build directory inside your project folder.
+   - Open Chrome and go to chrome://extensions/.
+   - Enable "Developer mode" using the toggle switch in the top-right corner.
+   - Click the "Load unpacked" button and select the build directory inside your project folder.
