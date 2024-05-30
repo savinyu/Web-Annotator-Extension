@@ -1,4 +1,4 @@
-// background.js
+
 
 chrome.runtime.onInstalled.addListener(() => {
     // Initialize storage with an empty annotations array
