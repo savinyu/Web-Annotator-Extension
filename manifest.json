@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "React Annotation Extension",
+    "description": "A Chrome extension to write annotations on websites.",
+    "version": "1.0",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "contextMenus"
+    ],
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": "images/logo192.png"
+    },
+    "icons": {
+      "16": "images/logo192.png",
+      "128": "images/logo192.png"
+    },
+    "background": {
+      "service_worker": "serviceWorker.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"],
+        "css": ["content.css"]
+      }
+    ]
+  }
+  
