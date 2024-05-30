@@ -1,30 +1,16 @@
-// content.js
+
 
 // Function to create the annotation UI
 function createAnnotationUI() {
     const annotationContainer = document.createElement('div');
     annotationContainer.id = 'annotation-container';
-    annotationContainer.style.position = 'fixed';
-    annotationContainer.style.top = '10px';
-    annotationContainer.style.right = '10px';
-    annotationContainer.style.backgroundColor = '#1e1e1e'; // Dark background
-    annotationContainer.style.border = '1px solid #6a0dad'; // Purple border
-    annotationContainer.style.padding = '10px';
-    annotationContainer.style.zIndex = '1000';
-    annotationContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Shadow for better visibility
-    annotationContainer.style.width = '300px';
-    annotationContainer.style.maxHeight = '400px';
-    annotationContainer.style.overflowY = 'auto';
-    annotationContainer.style.color = '#ffffff'; // White text
-    annotationContainer.style.fontFamily = 'Arial, sans-serif';
-
     const annotationList = document.createElement('div');
     annotationList.id = 'annotation-list';
     annotationContainer.appendChild(annotationList);
 
     const closeButton = document.createElement('button');
+    closeButton.className = "close-button";
     closeButton.textContent = 'Close';
-    closeButton.style.marginTop = '10px';
     closeButton.onclick = () => {
         annotationContainer.style.display = 'none';
     };
@@ -42,27 +28,19 @@ function renderAnnotations(annotations) {
     } else {
         annotations.forEach((annotation, index) => {
             const annotationItem = document.createElement('div');
-            annotationItem.style.borderBottom = '1px solid #6a0dad'; // Purple separator
-            annotationItem.style.padding = '5px 0';
+            annotationItem.id = "item";
 
             const annotationText = document.createElement('span');
             annotationText.textContent = `${annotation.text}: ${annotation.note}`;
             annotationText.style.display = 'block';
             annotationText.style.cursor = 'pointer';
             annotationText.onclick = () => {
-                highlightText(annotation.startContainerXPath, annotation.startOffset, annotation.endContainerXPath, annotation.endOffset);
+                highlightText(annotation);
             };
 
             const deleteButton = document.createElement('button');
+            deleteButton.className="delete-button";
             deleteButton.textContent = 'Delete';
-            deleteButton.style.marginTop = '5px';
-            deleteButton.style.backgroundColor = '#6a0dad'; // Purple button
-            deleteButton.style.border = 'none';
-            deleteButton.style.color = 'white';
-            deleteButton.style.padding = '5px 10px';
-            deleteButton.style.cursor = 'pointer';
-            deleteButton.style.fontSize = '0.9em';
-            deleteButton.style.borderRadius = '5px';
             deleteButton.onclick = () => {
                 deleteAnnotation(index);
             };
@@ -72,6 +50,8 @@ function renderAnnotations(annotations) {
             annotationList.appendChild(annotationItem);
         });
     }
+
+    annotations.forEach(annotation => highlightText(annotation));
 }
 
 // Function to delete an annotation
@@ -107,6 +87,7 @@ function handleTextSelection() {
                         annotations.push({ text: selectedText, note: note, startContainerXPath: startContainerXPath, startOffset: startOffset, endContainerXPath: endContainerXPath, endOffset: endOffset });
                         chrome.storage.local.set({ annotations: { ...result.annotations, [url]: annotations } }, function () {
                             renderAnnotations(annotations);
+                            highlightText({ startContainerXPath, startOffset, endContainerXPath, endOffset });
                         });
                     });
                 }
@@ -116,16 +97,17 @@ function handleTextSelection() {
 }
 
 // Function to highlight the text on the page
-function highlightText(startContainerXPath, startOffset, endContainerXPath, endOffset) {
-    const startContainer = getElementByXPath(startContainerXPath);
-    const endContainer = getElementByXPath(endContainerXPath);
+function highlightText(annotation) {
+    const startContainer = getElementByXPath(annotation.startContainerXPath);
+    const endContainer = getElementByXPath(annotation.endContainerXPath);
     if (startContainer && endContainer) {
         const range = document.createRange();
-        const selection = window.getSelection();
-        range.setStart(startContainer, startOffset);
-        range.setEnd(endContainer, endOffset);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        range.setStart(startContainer, annotation.startOffset);
+        range.setEnd(endContainer, annotation.endOffset);
+
+        const span = document.createElement('span');
+        span.className = 'highlighted-annotation';
+        range.surroundContents(span);
     }
 }
 
@@ -158,5 +140,5 @@ function init() {
     handleTextSelection();
 }
 
-// Run the initialization
+
 init();
